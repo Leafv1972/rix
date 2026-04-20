@@ -8,6 +8,10 @@ Rix 是一款用于分析英语文本可读性的工具，基于 textstat.py 开
 
 RIX（Readability Index）是一种衡量文本难度的指标，通过计算文本中长词（7个字母以上的词）与句子数量的比值来评估文本的可读性。RIX 值越高，表示文本中长词比例越高，阅读难度越大。
 
+
+https://gitee.com/leafv1972/rix
+https://github.com/Leafv1972/wastenotimeinreading
+
 ## 功能特性
 
 - **RIX 可读性指数计算**：自动分析文本中长词与句子的比例
