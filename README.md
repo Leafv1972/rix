@@ -1,8 +1,10 @@
-# Rix 英语文本可读性分析系统：理论、实现与应用综述
-
 https://gitee.com/leafv1972/rix
 
 https://github.com/Leafv1972/wastenotimeinreading
+
+ **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
+
+# Rix 英语文本可读性分析系统：理论、实现与应用综述
 
 ## 摘要
 
@@ -226,10 +228,234 @@ rix/
 3.  Björnsson, C. H. (1968). *Läsbarhet*. Stockholm: Bokförlaget Liber.
 4.  McLaughlin, G. H. (1969). SMOG Grading—A New Readability Formula. *Journal of Reading*, 12(8), 639-646.
 5.  Fry, E. (1968). A Readability Formula that Saves Time. *Journal of Reading*, 11(7), 513-516.
-6.  Gradio Documentation. https://www.gradio.app/
-7.  Textstat Library. https://github.com/fnl/textstat
+6.  Harrison, C. (1980). *Readability in the Classroom*. Cambridge: Cambridge University Press.
+7.  Rudolf Flesch, The Art of Readable Writing.
+8.  Gradio Documentation. https://www.gradio.app/
+9.  Textstat Library. https://github.com/fnl/textstat
 
 ---
 
 **许可信息**
 本项目基于 `textstat.py` 开源算法库许可证开源。具体许可信息请参见文本统计模块的文件头或项目根目录的 LICENSE 文件。词频数据（BNC, AME, Collins）受各自来源版权保护，仅供研究和教育使用。
+
+---
+**附录1：Rix 分级快速参考表 (基于 Kretschmer, 1984)**
+
+| Rix Score Range | Estimated Grade Level |
+| :--- | :--- |
+| < 0.20 | 1st Grade |
+| 0.20 - 0.49 | 2nd Grade |
+| 0.50 - 0.79 | 3rd Grade |
+| 0.80 - 1.29 | 4th Grade |
+| 1.30 - 1.79 | 5th Grade |
+| 1.80 - 2.39 | 6th Grade |
+| 2.40 - 2.99 | 7th Grade |
+| 3.00 - 3.69 | 8th Grade |
+| 3.70 - 4.49 | 9th Grade |
+| 4.50 - 5.29 | 10th Grade |
+| 5.30 - 6.19 | 11th Grade |
+| 6.20 - 7.19 | 12th Grade |
+| >= 7.20 | College |
+
+*(注：此表为基于原始文档逻辑的近似映射，实际应用中建议结合具体文本语境判断。)*
+
+**附录2：将 Joseph C. Kretschmer 文档中提供的 **RIXRATE** (BASIC程序) 转换为现代 **Python** 程序**
+
+Python 脚本保留了原版 BASIC 程序的核心逻辑：
+1.  **实时统计**：逐句输入，实时显示统计结果。
+2.  **长词定义**：单词长度 > 6 (即 7 个字母及以上)。
+3.  **Rix 公式**：`Rix = 长词总数 / 句子总数`。
+4.  **年级映射**：根据 Rix 值映射到对应的年级水平。
+
+### Python 代码实现
+
+```python
+import sys
+import os
+
+class RixAnalyzer:
+    def __init__(self):
+        # 初始化统计变量
+        self.total_words = 0
+        self.num_sentences = 0
+        self.num_long_words = 0
+        self.current_word_len = 0
+        self.running_text_title = ""
+        
+        # Rix 到 Grade Level 的映射表 (基于原始文档中的 BASIC 逻辑)
+        # 原始逻辑: 
+        # RX < .2 -> G=1
+        # RX < .5 -> G=2
+        # ...
+        # RX > 7.2 -> G=13 (College)
+        self.grade_levels = [
+            {"max_rx": 0.2, "grade": 1},
+            {"max_rx": 0.5, "grade": 2},
+            {"max_rx": 0.8, "grade": 3},
+            {"max_rx": 1.3, "grade": 4},
+            {"max_rx": 1.8, "grade": 5},
+            {"max_rx": 2.4, "grade": 6},
+            {"max_rx": 3.0, "grade": 7},
+            {"max_rx": 3.7, "grade": 8},
+            {"max_rx": 4.5, "grade": 9},
+            {"max_rx": 5.3, "grade": 10},
+            {"max_rx": 6.2, "grade": 11},
+            {"max_rx": 7.2, "grade": 12},
+            {"max_rx": float('inf'), "grade": "College"}
+        ]
+
+    def clear_screen(self):
+        """跨平台清屏"""
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+    def get_grade_from_rix(self, rix_value):
+        """根据 Rix 值查找对应的年级"""
+        for level in self.grade_levels:
+            if rix_value < level["max_rx"]:
+                return level["grade"]
+        return "College"
+
+    def update_stats_and_print(self):
+        """更新状态并打印当前统计信息"""
+        if self.num_sentences == 0:
+            avg_sentence_len = 0
+        else:
+            avg_sentence_len = self.total_words / self.num_sentences
+            
+        # 计算 Rix 值
+        if self.num_sentences == 0:
+            rix_val = 0
+        else:
+            rix_val = self.num_long_words / self.num_sentences
+            
+        current_grade = self.get_grade_from_rix(rix_val)
+        
+        # 格式化输出，尽量模拟原 BASIC 程序的屏幕布局
+        print("-" * 50)
+        print(f"TEXT: {self.running_text_title}")
+        print(f"TOTAL WORDS: {self.total_words}")
+        print(f"NO. SENTENCES: {self.num_sentences}")
+        print(f"NO. LONG WORDS (>6 chars): {self.num_long_words}")
+        print(f"AV. SENT. LENGTH: {avg_sentence_len:.1f}")
+        print(f"Rix SCORE: {rix_val:.2f}")
+        print(f"ESTIMATED GRADE LEVEL: {current_grade}")
+        print("-" * 50)
+        
+        # 模拟原程序中的小延迟，让更新更清晰
+        # time.sleep(0.5) 
+
+    def run(self):
+        """主程序循环"""
+        self.clear_screen()
+        print("RIXRATE READABILITY PROGRAM")
+        print("BASED ON THE RIX FORMULA")
+        print("BY J. ANDERSON")
+        print("PYTHON PORT BY ASSISTANT")
+        print()
+        
+        # 获取文本标题
+        try:
+            title = input("Enter a short title for the text (9 chars max): ")
+        except EOFError:
+            return
+            
+        # 限制标题长度以匹配原程序逻辑 (虽然Python中不需要，但为了忠实还原)
+        self.running_text_title = title[:9]
+        
+        self.clear_screen()
+        print("Instructions:")
+        print("1. Type sentences one by one.")
+        print("2. Press ENTER to finish a sentence.")
+        print("3. Use spaces between words.")
+        print("4. Omit punctuation except apostrophes and hyphens.")
+        print("5. Press Ctrl+C to exit.")
+        print("-" * 50)
+        
+        try:
+            while True:
+                # 获取用户输入
+                try:
+                    sentence = input(">> Enter sentence: ")
+                except EOFError:
+                    break
+                
+                if not sentence:
+                    continue
+
+                # 处理输入：转换为大写以符合原程序逻辑，并去除首尾空白
+                sentence = sentence.upper().strip()
+                
+                # 简单的分词处理
+                # 原 BASIC 程序通过检查空格 CHR$(32) 来分割单词
+                # 这里我们模拟同样的逻辑：按空格分割
+                words = sentence.split(' ')
+                
+                for word in words:
+                    if word:
+                        self.total_words += 1
+                        # 计算单词长度
+                        # 原程序逻辑: L = L + 1; IF L > 6 THEN LW = LW + 1; L = -30
+                        # 这意味着只要单词长度 >= 7 就算长词
+                        if len(word) > 6:
+                            self.num_long_words += 1
+                
+                # 每输入一行（按回车），视为一个句子结束
+                self.num_sentences += 1
+                
+                # 更新显示
+                self.update_stats_and_print()
+                
+        except KeyboardInterrupt:
+            print("\n\nProgram interrupted.")
+        except Exception as e:
+            print(f"\nAn error occurred: {e}")
+
+if __name__ == "__main__":
+    analyzer = RixAnalyzer()
+    analyzer.run()
+```
+
+### 代码说明与对照
+
+1.  **变量对应关系**：
+    *   BASIC `W` (Total Words) -> Python `self.total_words`
+    *   BASIC `S` (Number of Sentences) -> Python `self.num_sentences`
+    *   BASIC `LW` (Long Words) -> Python `self.num_long_words`
+    *   BASIC `L` (Current Word Length Counter) -> Python 内部通过 `len(word)` 直接处理，效果等同于原程序中的累加判断 `IF L > 6 THEN...`。
+
+2.  **长词定义**：
+    *   原 BASIC 代码：`IF L > 6 THEN LW = LW + 1`。这意味着当字母计数超过 6（即第 7 个字母存在时），计数器增加。因此，**7个或更多字母**的单词被定义为长词。
+    *   Python 代码：`if len(word) > 6:` 完全实现了这一逻辑。
+
+3.  **分级映射 (Grade Level Mapping)**：
+    *   原 BASIC 代码使用了一系列 `IF RX < x THEN G = y` 的语句。
+    *   Python 代码将其重构为 `self.grade_levels` 列表，逻辑完全一致：
+        *   `RX < 0.2` -> Grade 1
+        *   `RX < 0.5` -> Grade 2
+        *   ...
+        *   `RX > 7.2` -> College
+
+4.  **交互方式**：
+    *   原程序是字符流式的（逐字符读取）。
+    *   Python 程序采用行式输入（逐行读取），这在现代终端交互中更自然。由于原程序的核心统计单元是“句子”，而用户通常以行为单位输入句子，因此这种映射是安全的。每按一次回车，程序就更新一次统计，这与原程序“Press ENTER... statistics... are immediately updated”的行为一致。
+
+### 如何使用
+
+1.  确保你安装了 Python 3。
+2.  将上述代码保存为 `rixrate.py`。
+3.  在终端或命令提示符中运行：
+    ```bash
+    python rixrate.py
+    ```
+4.  按照提示输入文本标题，然后逐句输入你想分析的文本。每按一次 Enter，屏幕会刷新显示当前的 Rix 分数和预估年级。
+5.  按 `Ctrl+C` 退出程序。
+
+### 与原程序的主要区别（现代化改进）
+
+*   **标点处理**：原 BASIC 程序要求用户手动省略标点（除了撇号和连字符），因为它没有内置的正则表达式解析器。这个 Python 版本使用 `split(' ')` 进行简单分词，如果你输入了标点（如 "hello,"），它会被算作文本的一部分（长度变为 6，不算长词；如果变成 "hello,!"，长度为 7，就算长词）。**为了获得与原始研究完全一致的结果，建议输入时去掉标点，或者在代码中增加 `strip()` 和标点移除逻辑。**
+    *   *可选改进*：如果需要更精确的匹配，可以在 `for word in words:` 循环中加入：
+        ```python
+        word = word.strip(".,!?;:\"'")
+        if not word: continue
+        ```
+*   **屏幕刷新**：原程序在 TRS-80 上通过 `PRINT@` 精确定位光标。Python 版本使用简单的多行打印。如果你希望在终端中实现类似“原地更新”的效果，可以使用 ANSI 转义序列，但对于学术研究和日常分析，多行打印更清晰且不易出错。
