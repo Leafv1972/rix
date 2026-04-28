@@ -98,6 +98,9 @@ graph TD
 ```
 
 ### 3.2 技术栈
+
+ **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
+
 *   **后端**：Python 3.12+
     *   `textstat`：提供底层文本统计支持。
     *   `re` (Regex)：用于高性能的正则表达式清洗和分句。
@@ -230,8 +233,9 @@ rix/
 5.  Fry, E. (1968). A Readability Formula that Saves Time. *Journal of Reading*, 11(7), 513-516.
 6.  Harrison, C. (1980). *Readability in the Classroom*. Cambridge: Cambridge University Press.
 7.  Rudolf Flesch, The Art of Readable Writing.
-8.  Gradio Documentation. https://www.gradio.app/
-9.  Textstat Library. https://github.com/fnl/textstat
+8.  John Maguire, THE READABLE WRITING GUIDE. https://www.youtube.com/watch?v=TUz4tjSVn4w
+9.  Gradio Documentation. https://www.gradio.app/
+10.  Textstat Library. https://github.com/fnl/textstat
 
 ---
 
