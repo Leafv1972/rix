@@ -4,6 +4,8 @@ https://github.com/Leafv1972/rix
 
  **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
 
+  **_Note that Python 3.8.8 can be used on Windows 7, but not Windows XP or earlier._** 
+
 # Rix 英语文本可读性分析系统：理论、实现与应用综述
 
 ## 摘要
