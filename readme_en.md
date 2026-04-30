@@ -4,7 +4,7 @@ https://github.com/Leafv1972/rix
 
  **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
 
-  **_Note that Python 3.8.8 can be used on Windows 7, but not Windows XP or earlier._** 
+ **_Note that Python 3.8.8 can be used on Windows 7, but not Windows XP or earlier._** 
 
 # Rix English Text Readability Analysis System: A Review of Theory, Implementation, and Applications
 
@@ -153,7 +153,10 @@ graph TD
 ## 5. Installation and Usage Guide
 
 ### 5.1 Environment Requirements
-*   **Operating System**: Windows / macOS / Linux
+
+ **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
+
+*   **Operating System**: Windows 10/11 / macOS / Linux
 *   **Python Version**: 3.12.10 or higher
 *   **Dependencies**:
     ```bash
