@@ -1,10 +1,10 @@
 https://gitee.com/leafv1972/rix
 
-https://github.com/Leafv1972/rix
+https://github.com/Leafv1972/rix 
 
  **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
 
-  **_Note that Python 3.8.8 can be used on Windows 7, but not Windows XP or earlier._** 
+ **_Note that Python 3.8.8 can be used on Windows 7, but not Windows XP or earlier._** 
 
 # Rix 英语文本可读性分析系统：理论、实现与应用综述
 
@@ -153,7 +153,9 @@ graph TD
 ## 5. 安装与使用指南
 
 ### 5.1 环境要求
-*   **操作系统**：Windows / macOS / Linux
+ **_Note that Python 3.12.10 cannot be used on Windows 7 or earlier._** 
+
+*   **操作系统**：Windows 10/11 / macOS / Linux
 *   **Python 版本**：3.12.10 或更高
 *   **依赖库**：
     ```bash
