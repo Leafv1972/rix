@@ -468,3 +468,7 @@ if __name__ == "__main__":
         if not word: continue
         ```
 *   **Screen Refresh**: The original program precisely positioned the cursor on the TRS-80 using `PRINT@`. The Python version uses simple multi-line printing. If you wish to achieve a similar "in-place update" effect in the terminal, you can use ANSI escape sequences, but for academic research and daily analysis, multi-line printing is clearer and less prone to errors.
+
+**附录3：rix_py312b10_maincode_package**
+
+![](!!!!!!%5BUTF-8%5D-RixI_textstat-0.png)
